@@ -135,7 +135,7 @@ public class Hex extends Polygon {
 
 		g2d.setColor(Color.BLACK);
 		g2d.setFont(new Font(Font.SERIF, Font.BOLD, 40));
-		g2d.drawString("city", centerX - 30, centerY);
+		g2d.drawString("city", centerX - 30, centerY + 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawPolygon(this);
 
