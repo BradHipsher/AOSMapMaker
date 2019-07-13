@@ -32,7 +32,7 @@ public class Editor {
 		BufferedImage bufferedImage = new BufferedImage(BOUNDARY_WIDTH,BOUNDARY_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		getFrame().getPanel().getMapPanel().getMapArea().printablePaint(bufferedImage.createGraphics(),true);
 		try {
-			ImageIO.write(bufferedImage, "PNG", new File("C:\\Users\\Bhipsher\\Desktop\\testMap.PNG"));
+			ImageIO.write(bufferedImage, "PNG", new File(Main.SAVE_PNG_PATH));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
