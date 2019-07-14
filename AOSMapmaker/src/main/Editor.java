@@ -13,55 +13,62 @@ import main.editRes.EditorResources;
 import main.gui.BFrame;
 
 public class Editor {
-	
+
 	private final static int[] UNPRINTABLE_MODES = {
-			MODE_ID_1X2H	
+			//MODE_ID_1X2H	
 	};
-	
+
 	private boolean transposed = true;
 	private int mode = MODE_DEFAULT;
-	
+
 	private BFrame frame;
 
-	
-	
+
+
 	public Editor() {
 		setFrame(new BFrame(this));
 	}
-	
-	
-	
+
+
+
 	public void start() {
 		frame.setVisible(true);
 	}
-	
-	
+
+
 	public void saveMapAsPNG() {
 		// TODO Doesn't print correctly for multiple page modes.
-		BufferedImage bufferedImage = new BufferedImage(PAPER_WIDTH,PAPER_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		if (isTransposed()) bufferedImage = new BufferedImage(PAPER_HEIGHT,PAPER_WIDTH, BufferedImage.TYPE_INT_ARGB);
-		getFrame().getPanel().getMapPanel().getMapArea().printablePaint(bufferedImage.createGraphics(),true);
-		try {
-			ImageIO.write(bufferedImage, "PNG", new File(Main.SAVE_PNG_PATH));
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		String selectedPNGPath;
+		if(!(selectedPNGPath = queryPrintPNGDialog(frame)).equals("")) {
+			System.out.println(selectedPNGPath);
+			for (int pageNum = 0; pageNum < PAGE_SCALES_W_H[mode][0]*PAGE_SCALES_W_H[mode][1]; pageNum ++) {
+				BufferedImage bufferedImage = new BufferedImage(PAPER_WIDTH,PAPER_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+				if (isTransposed()) bufferedImage = new BufferedImage(PAPER_HEIGHT,PAPER_WIDTH, BufferedImage.TYPE_INT_ARGB);
+				getFrame().getPanel().getMapPanel().getMapArea().printablePaint(bufferedImage.createGraphics(), pageNum);
+				try {
+					ImageIO.write(bufferedImage, "PNG", new File(addPNG(selectedPNGPath + "_Page"+(pageNum+1))));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
-	
+
 	public void transpose() {
 		setTransposed(! isTransposed());
 		frame.getPanel().getMapPanel().getMapArea().repaint();
 	}
-	
+
 	public void changeMode() {
 		setMode(EditorResources.queryModeDialog(frame));
-		
+
 	}
-	
+
 	public void passNewModeDown(int mode) {
 		frame.getPanel().getMapPanel().getMapArea().newMode(mode);
 	}
-	
+
 	private static boolean checkPrintability(int mode) {
 		boolean ans = true;
 		for (int uMode : UNPRINTABLE_MODES) {
@@ -71,7 +78,7 @@ public class Editor {
 	}
 
 
-	
+
 	// Getters & Setters
 	public BFrame getFrame() {
 		return frame;

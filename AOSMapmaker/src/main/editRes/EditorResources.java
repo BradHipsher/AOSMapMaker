@@ -1,6 +1,8 @@
 package main.editRes;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import main.gui.BFrame;
 
@@ -44,7 +46,27 @@ public final class EditorResources {
 		return "L:" + PAGE_SCALES_W_H[mode][0] + " by S:" + PAGE_SCALES_W_H[mode][1];
 	}
 
+	
+	public static String queryPrintPNGDialog(BFrame frame) {
+		String s = "";
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("PNG File","png"));
+		int returnVal = chooser.showSaveDialog(frame);
+        if(returnVal == JFileChooser.APPROVE_OPTION) s = removePNG(chooser.getSelectedFile().getAbsolutePath());
+		return s;
+	}
 
+	public static String addPNG(String path) {
+		String s = path;
+		if (! path.substring(path.length()-4).toLowerCase().equals(".png")) s = s+".png";
+		return s;
+	}
+	
+	private static String removePNG(String path) {
+		String s = path;
+		if (path.substring(path.length()-4).toLowerCase().equals(".png")) s = s.substring(0,path.length()-4);
+		return s;
+	}
 
 	public static int queryModeDialog(BFrame frame) {
 		Object[] modeOptionNames = new String[NUMBER_OF_MODES];

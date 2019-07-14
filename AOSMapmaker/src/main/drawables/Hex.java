@@ -27,25 +27,6 @@ public class Hex extends Polygon {
 
 	public Hex(Tessellation tessellation, int centerX, int centerY, String tileType, int t) {
 		// I apologize in advance for how I'm transposing using 0 or 1 through math in the super constructor
-//		super(
-//				new int[] {
-//						(1-t)*(centerX) + t*(centerX-HEX_A), 
-//						(1-t)*(centerX+HEX_R_I) + t*(centerX-HEX_A/2),
-//						(1-t)*(centerX+HEX_R_I) + t*(centerX+HEX_A/2),
-//						(1-t)*(centerX) + t*(centerX+HEX_A), 
-//						(1-t)*(centerX-HEX_R_I) + t*(centerX+HEX_A/2),
-//						(1-t)*(centerX-HEX_R_I) + t* (centerX-HEX_A/2)
-//				}, 
-//				new int[] {
-//						(1-t)*(centerY-HEX_A) + t*(centerY), 
-//						(1-t)*(centerY-HEX_A/2) + t*(centerY+HEX_R_I), 
-//						(1-t)*(centerY+HEX_A/2) + t*(centerY+HEX_R_I), 
-//						(1-t)*(centerY+HEX_A) + t*(centerY), 
-//						(1-t)*(centerY+HEX_A/2) + t*(centerY-HEX_R_I), 
-//						(1-t)*(centerY-HEX_A/2) + t*(centerY-HEX_R_I)
-//				}, 
-//				6
-//				);
 		super(
 				new int[] {
 						centerX + (1-t)*(0) + t*(-HEX_A), 

@@ -20,12 +20,15 @@ public class Tessellation {
 		setMapArea(mapArea);
 		setHexes(new ArrayList<Hex>());
 		setSelectedHexID(-1);
-		tesselate(true);
+		tesselate(-1);
 	}
 
 
 
-	public void tesselate(boolean withMapAreaOffsets) {
+	public void tesselate(int pageNum) {
+		
+		// if pageNum = -1, then it's being drawn for the program
+		// if pageNum > -1, then it's drawing a page for the print.
 
 		// ASSUMES THAT YOU HAVE AT LEAST 2 ROWS!!!
 		// ASSUMES that Row 1 and Row 2 are only 1
@@ -67,11 +70,18 @@ public class Tessellation {
 
 		int mapAreaOffsetX = 0;
 		int mapAreaOffsetY = 0;
-		if(withMapAreaOffsets) {
+		if(pageNum == -1) {
 			mapAreaOffsetX = mapArea.getBoundaryX();
 			mapAreaOffsetY = mapArea.getBoundaryY();
 		}
-
+		
+		int pageNumberOffsetX = 0;
+		int pageNumberOffsetY = 0;
+		if (pageNum > -1) {
+			pageNumberOffsetX = (pageNum % EditorResources.PAGE_SCALES_W_H[localMode][0]) * PAPER_WIDTH * (-1);
+			pageNumberOffsetY = ((pageNum / EditorResources.PAGE_SCALES_W_H[localMode][0]) % EditorResources.PAGE_SCALES_W_H[localMode][1]) * PAPER_HEIGHT  * (-1);
+		}
+		
 		int loopID = 0;
 
 		if(mapArea.getPanel().getPanel().getFrame().getEditor().isTransposed()) {
@@ -82,8 +92,8 @@ public class Tessellation {
 					if (hexes.size() == loopID) hexTypes.add(EMPTY);
 					Hex hex = new Hex(
 							this, 
-							centerAlignOffsetY + mapAreaOffsetY + Hex.HEX_A + i*Hex.HEX_H_I,
-							centerAlignOffsetX + mapAreaOffsetX + Hex.HEX_D_I/2 + j*Hex.HEX_D_I + Hex.HEX_R_I*(i % 2)*row2Sign, 
+							pageNumberOffsetY + centerAlignOffsetY + mapAreaOffsetY + Hex.HEX_A + i*Hex.HEX_H_I,
+							pageNumberOffsetX + centerAlignOffsetX + mapAreaOffsetX + Hex.HEX_D_I/2 + j*Hex.HEX_D_I + Hex.HEX_R_I*(i % 2)*row2Sign, 
 							hexTypes.get(loopID),
 							1);
 					hexes.add(hex);
@@ -98,8 +108,8 @@ public class Tessellation {
 					if (hexes.size() == loopID) hexTypes.add(EMPTY);
 					Hex hex = new Hex(
 							this, 
-							centerAlignOffsetX + mapAreaOffsetX + Hex.HEX_D_I/2 + j*Hex.HEX_D_I + Hex.HEX_R_I*(i % 2)*row2Sign, 
-							centerAlignOffsetY + mapAreaOffsetY + Hex.HEX_A + i*Hex.HEX_H_I,
+							pageNumberOffsetX + centerAlignOffsetX + mapAreaOffsetX + Hex.HEX_D_I/2 + j*Hex.HEX_D_I + Hex.HEX_R_I*(i % 2)*row2Sign, 
+							pageNumberOffsetY + centerAlignOffsetY + mapAreaOffsetY + Hex.HEX_A + i*Hex.HEX_H_I,
 							hexTypes.get(loopID),
 							0);
 					hexes.add(hex);
@@ -134,11 +144,18 @@ public class Tessellation {
 	}
 
 	public String getSelectedHexType() {
-		return hexes.get(getSelectedHexID()).getTileType();
+		Hex selectedHex;
+		String s = EMPTY;
+		if ((selectedHex = getSelectedHex()) != null) s = selectedHex.getTileType();
+		return s;
 	}
 
 	public Hex getSelectedHex() {
-		return hexes.get(getSelectedHexID());
+		try {
+			return hexes.get(getSelectedHexID());
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 
@@ -159,6 +176,10 @@ public class Tessellation {
 	
 	public void wipeHexes() {
 		hexes = new ArrayList<Hex>();
+	}
+	
+	public void deselectHex() {
+		setSelectedHexID(-1);
 	}
 
 

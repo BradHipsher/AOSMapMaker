@@ -57,7 +57,7 @@ public class MapArea extends Component {
 	public void paint(Graphics g) {
 		g2d = (Graphics2D) g;
 		prePrintablePaint(g2d);
-		printablePaint(g2d, false);
+		printablePaint(g2d, -1);
 		postPrintablePaint(g2d);
 	}
 	
@@ -75,18 +75,18 @@ public class MapArea extends Component {
 		}
 	}
 	
-	public void printablePaint(Graphics2D g2d, boolean retesselate) {
+	public void printablePaint(Graphics2D g2d, int pageNum) {
 		Stroke s = null;
-		tessellation.tesselate(true);
-		if (retesselate) {
+		tessellation.tesselate(-1);
+		if (pageNum > -1) {
 			s = g2d.getStroke();
-			tessellation.tesselate(false);
+			tessellation.tesselate(pageNum);
 			g2d.setStroke(new BasicStroke(2.0f));;
 		}
 		tessellation.drawGrid(g2d);
 		tessellation.drawType(g2d);
-		if (retesselate) {
-			tessellation.tesselate(true);
+		if (pageNum > -1) {
+			tessellation.tesselate(-1);
 			g2d.setStroke(s);
 		}
 	}
@@ -98,6 +98,7 @@ public class MapArea extends Component {
 	
 	public void newMode(int mode) {
 		// wipe data
+		tessellation.deselectHex();
 		tessellation.wipeHexes();
 		paperWidth = PAPER_WIDTH * EditorResources.PAGE_SCALES_W_H[mode][0];
 		paperHeight = PAPER_HEIGHT * EditorResources.PAGE_SCALES_W_H[mode][1];

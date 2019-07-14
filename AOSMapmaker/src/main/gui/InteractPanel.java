@@ -105,14 +105,19 @@ public class InteractPanel extends JPanel {
 
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals(EMPTY)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(EMPTY);
-		if (e.getActionCommand().equals(WATER)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(WATER);
-		if (e.getActionCommand().equals(LAND)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(LAND);		
-		if (e.getActionCommand().equals(RIVER)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(RIVER);		
-		if (e.getActionCommand().equals(MOUNTAIN)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(MOUNTAIN);	
-		if (e.getActionCommand().equals(TOWN)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(TOWN);	
-		if (e.getActionCommand().equals(CITY)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(CITY);	
-		panel.getMapPanel().getMapArea().repaint();
+		try {
+			if (e.getActionCommand().equals(EMPTY)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(EMPTY);
+			if (e.getActionCommand().equals(WATER)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(WATER);
+			if (e.getActionCommand().equals(LAND)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(LAND);		
+			if (e.getActionCommand().equals(RIVER)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(RIVER);		
+			if (e.getActionCommand().equals(MOUNTAIN)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(MOUNTAIN);	
+			if (e.getActionCommand().equals(TOWN)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(TOWN);	
+			if (e.getActionCommand().equals(CITY)) panel.getMapPanel().getMapArea().getTessellation().getSelectedHex().setTileType(CITY);	
+			panel.getMapPanel().getMapArea().repaint();
+		} catch (NullPointerException x) {
+			
+		}
+		
 	}
 
 	public void printToPNG() {

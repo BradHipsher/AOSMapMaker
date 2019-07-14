@@ -1,6 +1,6 @@
 package main.gui;
 
-import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -18,7 +18,8 @@ public class BFrame extends JFrame{
 
 	public BFrame(Editor editor) {
 		setEditor(editor);
-		setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		//setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 		setUndecorated(false);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
