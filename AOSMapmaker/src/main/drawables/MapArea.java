@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import main.editRes.EditorResources;
 import main.gui.BPanel;
 import main.gui.MapPanel;
 
@@ -15,8 +17,11 @@ public class MapArea extends Component {
 
 	private static final long serialVersionUID = -812071750922935541L;
 	
-	final public static int BOUNDARY_WIDTH = 1288; // paper_h w -- USE dimensions.xlsx
-	final public static int BOUNDARY_HEIGHT = 995; // paper_h h -- USE dimensions.xlsx
+	final public static int PAPER_WIDTH = 1288; // paper_h w -- USE dimensions.xlsx
+	final public static int PAPER_HEIGHT = 995; // paper_h h -- USE dimensions.xlsx
+	
+	private int paperWidth = PAPER_WIDTH;
+	private int paperHeight = PAPER_HEIGHT;
 	
 	final public static int BOUNDARY_X = 20;
 	final public static int BOUNDARY_Y = 20;
@@ -40,7 +45,7 @@ public class MapArea extends Component {
 	
 	int mouseX = -1;
 	int mouseY = -1;
-		
+			
 	public MapArea(MapPanel panel) {
 		setPanel(panel);
 		addMouseListener(new MapMouseListener(this));
@@ -64,9 +69,9 @@ public class MapArea extends Component {
 		// Map Boundaries (assume 8.5 by 11)
 		g2d.setColor(Color.WHITE);
 		if (panel.getPanel().getFrame().getEditor().isTransposed()) {
-			g2d.fillRect(getBoundaryY(), getBoundaryX(), BOUNDARY_HEIGHT, BOUNDARY_WIDTH);
+			g2d.fillRect(getBoundaryY(), getBoundaryX(), paperHeight, paperWidth);
 		} else {
-			g2d.fillRect(getBoundaryX(), getBoundaryY(), BOUNDARY_WIDTH, BOUNDARY_HEIGHT);
+			g2d.fillRect(getBoundaryX(), getBoundaryY(), paperWidth, paperHeight);
 		}
 	}
 	
@@ -89,6 +94,14 @@ public class MapArea extends Component {
 	public void postPrintablePaint(Graphics2D g2d) {
 		tessellation.drawSelected(g2d, mouseX, mouseY);
 
+	}
+	
+	public void newMode(int mode) {
+		// wipe data
+		tessellation.wipeHexes();
+		paperWidth = PAPER_WIDTH * EditorResources.PAGE_SCALES_W_H[mode][0];
+		paperHeight = PAPER_HEIGHT * EditorResources.PAGE_SCALES_W_H[mode][1];
+		repaint();
 	}
 	
 
@@ -114,30 +127,19 @@ public class MapArea extends Component {
 			this.mapArea = mapArea;
 		}
 		
-		
 		// Override Methods
 		@Override
-		public void mouseClicked(MouseEvent e) {
-		}
-
+		public void mouseClicked(MouseEvent e) {}
 		@Override
-		public void mousePressed(MouseEvent e) {
-			
-		}
-
+		public void mousePressed(MouseEvent e) {}
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			mapArea.mouseClicked(e.getX(), e.getY());
 		}
-
 		@Override
-		public void mouseEntered(MouseEvent e) {
-
-		}
-
+		public void mouseEntered(MouseEvent e) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-		}
+		public void mouseExited(MouseEvent e) {}
 	}
 
 	
@@ -174,6 +176,21 @@ public class MapArea extends Component {
 	public void setTessellation(Tessellation tessellation) {
 		this.tessellation = tessellation;
 	}
-	
+
+	public int getPaperWidth() {
+		return paperWidth;
+	}
+
+	public void setPaperWidth(int paperWidth) {
+		this.paperWidth = paperWidth;
+	}
+
+	public int getPaperHeight() {
+		return paperHeight;
+	}
+
+	public void setPaperHeight(int paperHeight) {
+		this.paperHeight = paperHeight;
+	}
 	
 }

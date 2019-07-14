@@ -3,6 +3,8 @@ package main.drawables;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import main.editRes.EditorResources;
+
 import static main.drawables.MapArea.*;
 
 public class Tessellation {
@@ -43,11 +45,13 @@ public class Tessellation {
 			}
 		}
 
-		setHexes(new ArrayList<Hex>());
+		wipeHexes();
+		
+		int localMode = mapArea.getPanel().getPanel().getFrame().getEditor().getMode();
 
-		int tempHexesWidth1 = 7; // w2 -- USE dimensions.xslx (swapped row 1 and row 2)
-		int tempHexesWidth2 = 7; // w1 -- USE dimensions.xslx (swapped row 1 and row 2)
-		int tempHexesHeight = 6; // h -- USE dimensions.xslx
+		int tempHexesWidth1 = EditorResources.W1W2H[localMode][0]; // w2 -- USE dimensions.xslx (swapped row 1 and row 2)
+		int tempHexesWidth2 = EditorResources.W1W2H[localMode][1]; // w1 -- USE dimensions.xslx (swapped row 1 and row 2)
+		int tempHexesHeight = EditorResources.W1W2H[localMode][2]; // h -- USE dimensions.xslx
 
 		int maxHexesWidth = Math.max(tempHexesWidth1, tempHexesWidth2);
 		int minHexesWidth = Math.min(tempHexesWidth1, tempHexesWidth2);
@@ -55,8 +59,8 @@ public class Tessellation {
 		int totalHexesWidth = tempHexesWidth1 * Hex.HEX_D_I + (minHexesWidth - maxHexesWidth + 1) * Hex.HEX_R_I;
 		int totalHexesHeight = Hex.HEX_A*2 + (tempHexesHeight - 1) * Hex.HEX_H_I;
 
-		int centerAlignOffsetX = (BOUNDARY_WIDTH - totalHexesWidth) / 2;
-		int centerAlignOffsetY = (BOUNDARY_HEIGHT - totalHexesHeight) / 2;
+		int centerAlignOffsetX = (mapArea.getPaperWidth() - totalHexesWidth) / 2;
+		int centerAlignOffsetY = (mapArea.getPaperHeight() - totalHexesHeight) / 2;
 
 		double x = tempHexesWidth1 - tempHexesWidth2;
 		int row2Sign = (int) (-Math.pow(x, 2) + x + 1); // Input {-1, 0, 1} --> {-1, 1, 1}  || -(x^2) + x + 1
@@ -151,6 +155,10 @@ public class Tessellation {
 		}
 		if (multiValidID.size() > 0) ans = multiValidID.get(getIDOfMin(distances));
 		return ans; 
+	}
+	
+	public void wipeHexes() {
+		hexes = new ArrayList<Hex>();
 	}
 
 

@@ -7,27 +7,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import static main.drawables.MapArea.*;
+import static main.editRes.EditorResources.*;
 
+import main.editRes.EditorResources;
 import main.gui.BFrame;
 
 public class Editor {
 	
-	final public static int MODE_1X1V = 0;
-	final public static int MODE_2X1V = 1;
-	final public static int MODE_1X2V = 2;
-	final public static int MODE_2X2V = 3;
-	final public static int MODE_3X1V = 4;
-	final public static int MODE_1X3V = 5;
-	final public static int MODE_3X3V = 6;
-	final public static int MODE_V_TO_H_ADDER = 100; 
-	final public static int MODE_1X1H = MODE_V_TO_H_ADDER + MODE_1X1V;
-	final public static int MODE_2X1H = MODE_V_TO_H_ADDER + MODE_2X1V;
-	final public static int MODE_1X2H = MODE_V_TO_H_ADDER + MODE_1X2V;
-	final public static int MODE_2X2H = MODE_V_TO_H_ADDER + MODE_2X2V;
-	final public static int MODE_3X1H = MODE_V_TO_H_ADDER + MODE_3X1V;
-	final public static int MODE_1X3H = MODE_V_TO_H_ADDER + MODE_1X3V;
-	final public static int MODE_3X3H = MODE_V_TO_H_ADDER + MODE_3X3V;
-	final public static int MODE_DEFAULT = MODE_1X1V;
+	private final static int[] UNPRINTABLE_MODES = {
+			MODE_ID_1X2H	
+	};
 	
 	private boolean transposed = true;
 	private int mode = MODE_DEFAULT;
@@ -48,8 +37,9 @@ public class Editor {
 	
 	
 	public void saveMapAsPNG() {
-		BufferedImage bufferedImage = new BufferedImage(BOUNDARY_WIDTH,BOUNDARY_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		if (isTransposed()) bufferedImage = new BufferedImage(BOUNDARY_HEIGHT,BOUNDARY_WIDTH, BufferedImage.TYPE_INT_ARGB);
+		// TODO Doesn't print correctly for multiple page modes.
+		BufferedImage bufferedImage = new BufferedImage(PAPER_WIDTH,PAPER_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		if (isTransposed()) bufferedImage = new BufferedImage(PAPER_HEIGHT,PAPER_WIDTH, BufferedImage.TYPE_INT_ARGB);
 		getFrame().getPanel().getMapPanel().getMapArea().printablePaint(bufferedImage.createGraphics(),true);
 		try {
 			ImageIO.write(bufferedImage, "PNG", new File(Main.SAVE_PNG_PATH));
@@ -61,6 +51,23 @@ public class Editor {
 	public void transpose() {
 		setTransposed(! isTransposed());
 		frame.getPanel().getMapPanel().getMapArea().repaint();
+	}
+	
+	public void changeMode() {
+		setMode(EditorResources.queryModeDialog(frame));
+		
+	}
+	
+	public void passNewModeDown(int mode) {
+		frame.getPanel().getMapPanel().getMapArea().newMode(mode);
+	}
+	
+	private static boolean checkPrintability(int mode) {
+		boolean ans = true;
+		for (int uMode : UNPRINTABLE_MODES) {
+			if (uMode == mode) ans = false;
+		}
+		return ans;
 	}
 
 
@@ -88,6 +95,8 @@ public class Editor {
 
 	public void setMode(int mode) {
 		this.mode = mode;
+		passNewModeDown(mode);
+		frame.getPanel().getInteractPanel().getPrint().setEnabled(checkPrintability(mode));
 	}
 
 }
