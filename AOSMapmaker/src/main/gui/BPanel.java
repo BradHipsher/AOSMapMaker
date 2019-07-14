@@ -1,6 +1,5 @@
 package main.gui;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import static main.gui.BFrame.*;

@@ -5,8 +5,6 @@ import static main.gui.BFrame.*;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -20,10 +18,10 @@ public class InteractPanel extends JPanel {
 	private static final long serialVersionUID = -7625961776531140571L;
 	
 	public final static int PANEL_HEIGHT = FRAME_HEIGHT;
-	public final static int PANEL_WIDTH = 980;
+	public final static int PANEL_WIDTH = 480;
 	
 	private BPanel panel;
-	private JButton print;
+	private JButton print, transpose;
 	private ButtonGroup radioButtons;
 	private JRadioButton empty, water, land, river, mountain, town, city;
 	
@@ -91,6 +89,12 @@ public class InteractPanel extends JPanel {
 		print = new JButton("PRINT");
 		print.addActionListener((e) -> printToPNG());
 		add(print);
+		
+		// Transpose Button
+		transpose = new JButton("");
+		setTransposeButtonName();
+		transpose.addActionListener((e) -> transpose());
+		add(transpose);
 	}
 	
 	
@@ -108,6 +112,19 @@ public class InteractPanel extends JPanel {
 	
 	public void printToPNG() {
 		getPanel().getFrame().getEditor().saveMapAsPNG();
+	}
+	
+	public void transpose() {
+		panel.getFrame().getEditor().transpose();
+		setTransposeButtonName();
+	}
+	
+	public void setTransposeButtonName() {
+		if(panel.getFrame().getEditor().isTransposed()) {
+			transpose.setText("Transpose"); 
+		} else {
+			transpose.setText("Transpose Back");
+		}
 	}
 	
 	public void refreshRadioButtons(String type) {

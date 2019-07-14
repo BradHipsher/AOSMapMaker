@@ -11,10 +11,12 @@ public class Hex extends Polygon {
 
 	private static final long serialVersionUID = 5785025424345449731L;
 
-	final static int HEX_R_I = 94; // Incircle Radius -- USE dimensions.xslx
-	final static int HEX_H_I = 162; // Height of hex rows -- USE dimensions.xslx
-	final static int HEX_A = 108; // Circumcircle Radius = Hex Edge -- USE dimensions.xslx 
+	final static int HEX_R_I = 83; // Incircle Radius -- USE dimensions.xslx
+	final static int HEX_H_I = 144; // Height of hex rows -- USE dimensions.xslx
+	final static int HEX_A = 96; // Circumcircle Radius = Hex Edge -- USE dimensions.xslx 
 	final static int HEX_D_I = HEX_R_I*2; // Incircle Diameter
+	final static int TRANSPOSE_NO = 0;
+	final static int TRANSPOSE_YES = 1;
 
 	private Tessellation tessellation;
 	private int centerX;
@@ -23,17 +25,51 @@ public class Hex extends Polygon {
 
 
 
-	public Hex(Tessellation tessellation, int centerX, int centerY, String tileType) {
-		super(new int[] {centerX, centerX+HEX_R_I,centerX+HEX_R_I,centerX, centerX-HEX_R_I,centerX-HEX_R_I }, 
-				new int[] {centerY-HEX_A, centerY-HEX_A/2, centerY+HEX_A/2, centerY+HEX_A, centerY+HEX_A/2, centerY-HEX_A/2}, 
-				6);
+	public Hex(Tessellation tessellation, int centerX, int centerY, String tileType, int t) {
+		// I apologize in advance for how I'm transposing using 0 or 1 through math in the super constructor
+//		super(
+//				new int[] {
+//						(1-t)*(centerX) + t*(centerX-HEX_A), 
+//						(1-t)*(centerX+HEX_R_I) + t*(centerX-HEX_A/2),
+//						(1-t)*(centerX+HEX_R_I) + t*(centerX+HEX_A/2),
+//						(1-t)*(centerX) + t*(centerX+HEX_A), 
+//						(1-t)*(centerX-HEX_R_I) + t*(centerX+HEX_A/2),
+//						(1-t)*(centerX-HEX_R_I) + t* (centerX-HEX_A/2)
+//				}, 
+//				new int[] {
+//						(1-t)*(centerY-HEX_A) + t*(centerY), 
+//						(1-t)*(centerY-HEX_A/2) + t*(centerY+HEX_R_I), 
+//						(1-t)*(centerY+HEX_A/2) + t*(centerY+HEX_R_I), 
+//						(1-t)*(centerY+HEX_A) + t*(centerY), 
+//						(1-t)*(centerY+HEX_A/2) + t*(centerY-HEX_R_I), 
+//						(1-t)*(centerY-HEX_A/2) + t*(centerY-HEX_R_I)
+//				}, 
+//				6
+//				);
+		super(
+				new int[] {
+						centerX + (1-t)*(0) + t*(-HEX_A), 
+						centerX + (1-t)*(+HEX_R_I) + t*(-HEX_A/2),
+						centerX + (1-t)*(+HEX_R_I) + t*(+HEX_A/2),
+						centerX + (1-t)*(0) + t*(+HEX_A), 
+						centerX + (1-t)*(-HEX_R_I) + t*(+HEX_A/2),
+						centerX + (1-t)*(-HEX_R_I) + t* (-HEX_A/2)
+				}, 
+				new int[] {
+						centerY + (1-t)*(-HEX_A) + t*(0), 
+						centerY + (1-t)*(-HEX_A/2) + t*(+HEX_R_I), 
+						centerY + (1-t)*(+HEX_A/2) + t*(+HEX_R_I), 
+						centerY + (1-t)*(+HEX_A) + t*(0), 
+						centerY + (1-t)*(+HEX_A/2) + t*(-HEX_R_I), 
+						centerY + (1-t)*(-HEX_A/2) + t*(-HEX_R_I)
+				}, 
+				6
+				);
 		setTessellation(tessellation);
 		setCenterX(centerX);
 		setCenterY(centerY);
 		setTileType(tileType);
 	}
-
-	
 	
 
 	public void drawGrid(Graphics2D g2d) {

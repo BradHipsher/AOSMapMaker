@@ -3,8 +3,6 @@ package main.gui;
 import static main.gui.BFrame.*;
 
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -14,7 +12,7 @@ public class MapPanel extends JPanel{
 	
 	private static final long serialVersionUID = -6321115478950854427L;
 	public final static int PANEL_HEIGHT = FRAME_HEIGHT;
-	public final static int PANEL_WIDTH = FRAME_WIDTH - 1000;
+	public final static int PANEL_WIDTH = FRAME_WIDTH - 500;
 	
 	private BPanel panel;
 	private MapArea mapArea;

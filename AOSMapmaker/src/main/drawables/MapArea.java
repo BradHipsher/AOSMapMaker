@@ -8,8 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-
 import main.gui.BPanel;
 import main.gui.MapPanel;
 
@@ -17,27 +15,11 @@ public class MapArea extends Component {
 
 	private static final long serialVersionUID = -812071750922935541L;
 	
-	final public static int MODE_1X1H = 1;
-	final public static int MODE_2X1H = 2;
-	final public static int MODE_1X2H = 3;
-	final public static int MODE_2X2H = 4;
-	final public static int MODE_3X1H = 5;
-	final public static int MODE_1X3H = 6;
-	final public static int MODE_3X3H = 7;
-	final public static int MODE_1X1V = 11;
-	final public static int MODE_2X1V = 12;
-	final public static int MODE_1X2V = 13;
-	final public static int MODE_2X2V = 14;
-	final public static int MODE_3X1V = 15;
-	final public static int MODE_1X3V = 16;
-	final public static int MODE_3X3V = 17;
-	final public static int MODE_DEFAULT = MODE_1X1H;
+	final public static int BOUNDARY_WIDTH = 1288; // paper_h w -- USE dimensions.xlsx
+	final public static int BOUNDARY_HEIGHT = 995; // paper_h h -- USE dimensions.xlsx
 	
-	final public static int BOUNDARY_WIDTH = 1456; // paper_h w -- USE dimensions.xlsx
-	final public static int BOUNDARY_HEIGHT = 1125; // paper_h h -- USE dimensions.xlsx
-	
-	final public static int BOUNDARY_X = 60;
-	final public static int BOUNDARY_Y = 110;
+	final public static int BOUNDARY_X = 20;
+	final public static int BOUNDARY_Y = 20;
 	
 	private int boundaryX = BOUNDARY_X;
 	private int boundaryY = BOUNDARY_Y;
@@ -53,29 +35,22 @@ public class MapArea extends Component {
 	
 	private MapPanel panel;
 	private Tessellation tessellation;
-	private int mode;
 	
 	Graphics2D g2d;
 	
 	int mouseX = -1;
 	int mouseY = -1;
 		
-	public MapArea(MapPanel panel, int mode) {
-		setpanel(panel);
-		addMouseListener(new MapMouseListener(this));
-		setMode(mode);
-		setTessellation(new Tessellation(this, mode));
-	}
-	
 	public MapArea(MapPanel panel) {
-		this(panel, MODE_DEFAULT);
+		setPanel(panel);
+		addMouseListener(new MapMouseListener(this));
+		setTessellation(new Tessellation(this));
 	}
-	
+
 	
 	
 	public void paint(Graphics g) {
 		g2d = (Graphics2D) g;
-		
 		prePrintablePaint(g2d);
 		printablePaint(g2d, false);
 		postPrintablePaint(g2d);
@@ -85,13 +60,19 @@ public class MapArea extends Component {
 		// Background
 		g2d.setColor(Color.DARK_GRAY);
 		g2d.fillRect(0, 0, BPanel.PANEL_WIDTH, BPanel.PANEL_HEIGHT);
+		
 		// Map Boundaries (assume 8.5 by 11)
 		g2d.setColor(Color.WHITE);
-		g2d.fillRect(getBoundaryX(), getBoundaryY(), BOUNDARY_WIDTH, BOUNDARY_HEIGHT);
+		if (panel.getPanel().getFrame().getEditor().isTransposed()) {
+			g2d.fillRect(getBoundaryY(), getBoundaryX(), BOUNDARY_HEIGHT, BOUNDARY_WIDTH);
+		} else {
+			g2d.fillRect(getBoundaryX(), getBoundaryY(), BOUNDARY_WIDTH, BOUNDARY_HEIGHT);
+		}
 	}
 	
 	public void printablePaint(Graphics2D g2d, boolean retesselate) {
 		Stroke s = null;
+		tessellation.tesselate(true);
 		if (retesselate) {
 			s = g2d.getStroke();
 			tessellation.tesselate(false);
@@ -162,20 +143,12 @@ public class MapArea extends Component {
 	
 	
 	// Getters & Setters
-	public MapPanel getpanel() {
+	public MapPanel getPanel() {
 		return panel;
 	}
 
-	public void setpanel(MapPanel panel) {
+	public void setPanel(MapPanel panel) {
 		this.panel = panel;
-	}
-
-	public int getMode() {
-		return mode;
-	}
-
-	public void setMode(int mode) {
-		this.mode = mode;
 	}
 
 	public int getBoundaryX() {
