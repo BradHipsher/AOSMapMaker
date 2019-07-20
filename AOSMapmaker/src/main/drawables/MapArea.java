@@ -76,18 +76,21 @@ public class MapArea extends Component {
 	}
 	
 	public void printablePaint(Graphics2D g2d, int pageNum) {
-		Stroke s = null;
+		//Stroke s = null;
 		tessellation.tesselate(-1);
 		if (pageNum > -1) {
-			s = g2d.getStroke();
+			//s = g2d.getStroke();
 			tessellation.tesselate(pageNum);
-			g2d.setStroke(new BasicStroke(2.0f));;
+			//g2d.setStroke(new BasicStroke(2.0f));;
+			
 		}
 		tessellation.drawGrid(g2d);
 		tessellation.drawType(g2d);
+		tessellation.drawWaterBorder(g2d);
+		tessellation.drawTileBorder(g2d);
 		if (pageNum > -1) {
 			tessellation.tesselate(-1);
-			g2d.setStroke(s);
+			//g2d.setStroke(s);
 		}
 	}
 	

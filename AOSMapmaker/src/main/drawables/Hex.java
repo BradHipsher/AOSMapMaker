@@ -101,8 +101,6 @@ public class Hex extends Polygon {
 
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.fillPolygon(this);
-		g2d.setColor(Color.BLACK);
-		g2d.drawPolygon(this);
 
 		g2d.setColor(prevColor);
 	}
@@ -112,10 +110,7 @@ public class Hex extends Polygon {
 		
 		drawLand(g2d);
 
-		g2d.setColor(Color.LIGHT_GRAY);
-		g2d.drawPolygon(this);
-		g2d.setColor(Color.BLACK);
-		g2d.drawPolygon(this);
+		// TODO river hex graphics
 
 		g2d.setColor(prevColor);
 	}
@@ -127,8 +122,6 @@ public class Hex extends Polygon {
 		
 		g2d.setColor(Color.DARK_GRAY);
 		g2d.fillPolygon(new Triangle(centerX, centerY, 2*HEX_R_I/3));
-		g2d.setColor(Color.BLACK);
-		g2d.drawPolygon(this);
 
 		g2d.setColor(prevColor);
 	}
@@ -140,8 +133,6 @@ public class Hex extends Polygon {
 		
 		g2d.setColor(Color.WHITE);
 		g2d.fillOval(centerX - (HEX_R_I/2),centerY - (HEX_R_I/2), HEX_R_I,HEX_R_I);
-		g2d.setColor(Color.BLACK);
-		g2d.drawPolygon(this);
 
 		g2d.setColor(prevColor);
 	}
@@ -153,13 +144,28 @@ public class Hex extends Polygon {
 		g2d.setColor(Color.BLACK);
 		g2d.setFont(new Font(Font.SERIF, Font.BOLD, 40));
 		g2d.drawString("city", centerX - 30, centerY + 10);
-		g2d.setColor(Color.BLACK);
-		g2d.drawPolygon(this);
 
 		g2d.setFont(prevFont);
 		g2d.setColor(prevColor);
 	}
+	
+	public void drawWaterBorder(Graphics2D g2d) {
+		Color prevColor = g2d.getColor();
+	
+		g2d.setColor(Color.WHITE);
+		g2d.drawPolygon(this);
 
+		g2d.setColor(prevColor);
+	}
+	
+	public void drawTileBorder(Graphics2D g2d) {
+		Color prevColor = g2d.getColor();
+	
+		g2d.setColor(Color.BLACK);
+		g2d.drawPolygon(this);
+
+		g2d.setColor(prevColor);
+	}
 	
 	
 	

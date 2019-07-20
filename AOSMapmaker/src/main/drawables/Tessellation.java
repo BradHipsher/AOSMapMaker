@@ -133,6 +133,23 @@ public class Tessellation {
 			hex.drawType(g2d);
 		}
 	}	
+	
+	public void drawWaterBorder(Graphics2D g2d) {
+		for(Hex hex : hexes) {
+			if(hex.getTileType().equals(WATER)) hex.drawWaterBorder(g2d);
+		}
+	}
+	
+	public void drawTileBorder(Graphics2D g2d) {
+		for(Hex hex : hexes) {
+			if (hex.getTileType().equals(LAND)) hex.drawTileBorder(g2d);
+			if (hex.getTileType().equals(RIVER)) hex.drawTileBorder(g2d);
+			if (hex.getTileType().equals(MOUNTAIN)) hex.drawTileBorder(g2d);
+			if (hex.getTileType().equals(TOWN)) hex.drawTileBorder(g2d);
+			if (hex.getTileType().equals(CITY)) hex.drawTileBorder(g2d);		
+		}
+	}
+	
 	public void drawSelected(Graphics2D g2d, int mouseX, int mouseY) { 
 		int hexID = getSelectedHexID();
 		if (hexID !=-1) hexes.get(hexID).drawSelected(g2d);
